@@ -114,33 +114,26 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private IEnumerator falling(Tile topTile, Tile bottomTile, int bottomTileY, int x)
+    private IEnumerator animateFall(Tile topTile, int topTileY, Tile bottomTile, int bottomTileY, int x)
     {
-        //animationTiles.Add(Instantiate(topTile, topTile.transform.position, Quaternion.identity));
-        //Tile animationTile = animationTiles[animationTiles.Count - 1];
         Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
+        animationTiles.Add(animationTile);
         animationTile.gameObject.layer = LayerMask.NameToLayer("Igore Raycast");
+
+        tileArray[x, bottomTileY].spriteRenderer.sprite = topTile.spriteRenderer.sprite;
+
+        tileArray[x, topTileY].spriteRenderer.sprite = null;
+
+        //tileArray[x, bottomTileY].spriteRenderer.enabled = false;
 
         while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.001f)
         {
             animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position, (animationTile.transform.position.y -
-                bottomTile.transform.position.y) / 20);
+                bottomTile.transform.position.y) / 100);
             yield return null;
         }
 
-        Destroy(animationTile);
-        tileArray[x, bottomTileY].spriteRenderer.enabled = true;
-    }
-
-    private void animateFall(Tile topTile, int topTileY, Tile bottomTile, int bottomTileY, int x)
-    {
-        tileArray[x, topTileY].spriteRenderer.sprite = null;
-
-        tileArray[x, bottomTileY].spriteRenderer.enabled = false;
-
-        StartCoroutine(falling(topTile, bottomTile, bottomTileY, x));
-
-        tileArray[x, bottomTileY].spriteRenderer.sprite = topTile.spriteRenderer.sprite;
+        //tileArray[x, bottomTileY].spriteRenderer.enabled = true;
     }
 
     private List<Tile> FindMatch(Tile tile, Vector2 dir)
@@ -260,6 +253,8 @@ public class BoardController : MonoBehaviour
                 }
             }
         }
+
+        destroyAllAnimationTiles();
     }
 
     private void ShiftTileDown(int xPos, int yPos)
@@ -279,7 +274,7 @@ public class BoardController : MonoBehaviour
                     y++;
                 }
 
-                animateFall(hit.collider.gameObject.GetComponent<Tile>(), y, tileArray[xPos, yPos], yPos, xPos);
+                StartCoroutine(animateFall(hit.collider.gameObject.GetComponent<Tile>(), y, tileArray[xPos, yPos], yPos, xPos));
             }
 
             //destroyAllAnimationTiles();
