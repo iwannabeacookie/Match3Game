@@ -21,6 +21,9 @@ public class BoardController : MonoBehaviour
 
     private bool isFindMatch = false;
 
+    private int currentAnimationTile = 0;
+    private List<Tile> animationTiles = new List<Tile>();
+
     public void SetValue(Tile[,] tileArray, int xSize, int ySize, List<Sprite> tileSprite)
     {
         this.xSize = xSize;
@@ -100,21 +103,44 @@ public class BoardController : MonoBehaviour
         }
     }
 
+    private void destroyAllAnimationTiles()
+    {
+        if (animationTiles.Count != 0)
+        {
+            foreach (Tile animationTile in animationTiles)
+            {
+                Destroy(animationTile);
+            }
+        }
+    }
+
+    private IEnumerator falling(Tile topTile, Tile bottomTile, int bottomTileY, int x)
+    {
+        //animationTiles.Add(Instantiate(topTile, topTile.transform.position, Quaternion.identity));
+        //Tile animationTile = animationTiles[animationTiles.Count - 1];
+        Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
+        animationTile.gameObject.layer = LayerMask.NameToLayer("Igore Raycast");
+
+        while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.001f)
+        {
+            animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position, (animationTile.transform.position.y -
+                bottomTile.transform.position.y) / 20);
+            yield return null;
+        }
+
+        Destroy(animationTile);
+        tileArray[x, bottomTileY].spriteRenderer.enabled = true;
+    }
+
     private void animateFall(Tile topTile, int topTileY, Tile bottomTile, int bottomTileY, int x)
     {
-        Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
-        float movementSpeed = 1f;
-
         tileArray[x, topTileY].spriteRenderer.sprite = null;
 
-        // GOT AN UNSOLVED PROBLEM OF INFINITE CYCLE
-        while (animationTile.transform.position != bottomTile.transform.position)
-        {
-            animationTile.transform.position = animationTile.transform.position + new Vector3(0, bottomTile.transform.position.y - animationTile.transform.position.y, 0);
-        }
-        
-        tileArray[x, bottomTileY].spriteRenderer.sprite = animationTile.spriteRenderer.sprite;
-        Destroy(animationTile);
+        tileArray[x, bottomTileY].spriteRenderer.enabled = false;
+
+        StartCoroutine(falling(topTile, bottomTile, bottomTileY, x));
+
+        tileArray[x, bottomTileY].spriteRenderer.sprite = topTile.spriteRenderer.sprite;
     }
 
     private List<Tile> FindMatch(Tile tile, Vector2 dir)
@@ -250,13 +276,13 @@ public class BoardController : MonoBehaviour
                 while (hit.collider.gameObject.GetComponent<SpriteRenderer>().sprite == null)
                 {
                     hit = Physics2D.Raycast(hit.collider.gameObject.transform.position, Vector2.up);
-                    Debug.Log(hit.collider.gameObject.GetComponent<Sprite>());
                     y++;
                 }
 
                 animateFall(hit.collider.gameObject.GetComponent<Tile>(), y, tileArray[xPos, yPos], yPos, xPos);
             }
 
+            //destroyAllAnimationTiles();
         }
         else
         {
