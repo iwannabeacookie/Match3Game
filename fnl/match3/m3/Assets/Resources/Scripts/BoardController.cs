@@ -111,14 +111,15 @@ public class BoardController : MonoBehaviour
 
         tileArray[x, bottomTileY].spriteRenderer.enabled = false;
 
-        Destroy(animationTile.gameObject, 2.5f); // t = 3f (?)
+        //Destroy(animationTile.gameObject, 0.5f); // t = 3f (?)
         while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.01f)
         {
-            animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position, (animationTile.transform.position.y -
-                bottomTile.transform.position.y) / 100);
+            animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position,
+                Vector3.Distance(tileArray[0, 0].transform.position, tileArray[0, ySize - 1].transform.position) / 200); // 20 for build | 200 for dev
             yield return null;
         }
 
+        Destroy(animationTile.gameObject);
         tileArray[x, bottomTileY].spriteRenderer.enabled = true;
     }
 
