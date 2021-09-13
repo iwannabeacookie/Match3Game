@@ -100,6 +100,23 @@ public class BoardController : MonoBehaviour
         }
     }
 
+    private void animateFall(Tile topTile, int topTileY, Tile bottomTile, int bottomTileY, int x)
+    {
+        Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
+        float movementSpeed = 1f;
+
+        tileArray[x, topTileY].spriteRenderer.sprite = null;
+
+        // GOT AN UNSOLVED PROBLEM OF INFINITE CYCLE
+        while (animationTile.transform.position != bottomTile.transform.position)
+        {
+            animationTile.transform.position = animationTile.transform.position + new Vector3(0, bottomTile.transform.position.y - animationTile.transform.position.y, 0);
+        }
+        
+        tileArray[x, bottomTileY].spriteRenderer.sprite = animationTile.spriteRenderer.sprite;
+        Destroy(animationTile);
+    }
+
     private List<Tile> FindMatch(Tile tile, Vector2 dir)
     {
         List<Tile> cashFindTiles = new List<Tile>();
@@ -161,8 +178,6 @@ public class BoardController : MonoBehaviour
         {
             isFindMatch = false;
 
-            Debug.Log(IncrementSprite);
-
             if (tile.GetComponent<SpriteRenderer>().sprite == IncrementSprite)
             {
                 ScoreScript.instance.IncreaseScoreCount();
@@ -221,51 +236,27 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    /* private void ShiftTileDown(int xPos, int yPos)
-    {
-        List<SpriteRenderer> cashRenderer = new List<SpriteRenderer>();
-        for (int y = yPos; y < ySize; y++)
-        {
-            Tile tile = tileArray[xPos, y];
-            if (tile.isEmpty)
-            {
-                cashRenderer.Add(tile.spriteRenderer);
-            }
-        }
-    }
-
-    private void SetNewSprite(int xPos, List<SpriteRenderer> renderer)
-    {
-
-    }
-
-    private void GetNewSprite()
-    {
-            
-    }
-    */
-
     private void ShiftTileDown(int xPos, int yPos)
     {
+        int y = yPos;
+
         if (yPos != ySize - 1)
         {
-            for (int y = yPos; y < ySize; y++)
+            RaycastHit2D hit = Physics2D.Raycast(tileArray[xPos, yPos].transform.position, Vector2.up);
+            y++;
+
+            if (hit.collider != null)
             {
-                if (tileArray[xPos, (ySize - 1)].isEmpty)
+                while (hit.collider.gameObject.GetComponent<SpriteRenderer>().sprite == null)
                 {
-                    GenerateNewSprite(xPos);
+                    hit = Physics2D.Raycast(hit.collider.gameObject.transform.position, Vector2.up);
+                    Debug.Log(hit.collider.gameObject.GetComponent<Sprite>());
+                    y++;
                 }
-                if (!tileArray[xPos, y].isEmpty)
-                {
-                    tileArray[xPos, y - 1].spriteRenderer.sprite = tileArray[xPos, y].spriteRenderer.sprite;
 
-                    tileArray[xPos, y].spriteRenderer.sprite = null;
-
-                    GenerateNewSprite(xPos);
-
-                    return;
-                }
+                animateFall(hit.collider.gameObject.GetComponent<Tile>(), y, tileArray[xPos, yPos], yPos, xPos);
             }
+
         }
         else
         {
