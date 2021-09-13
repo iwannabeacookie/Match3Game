@@ -21,9 +21,6 @@ public class BoardController : MonoBehaviour
 
     private bool isFindMatch = false;
 
-    private int currentAnimationTile = 0;
-    private List<Tile> animationTiles = new List<Tile>();
-
     public void SetValue(Tile[,] tileArray, int xSize, int ySize, List<Sprite> tileSprite)
     {
         this.xSize = xSize;
@@ -103,37 +100,26 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private void destroyAllAnimationTiles()
-    {
-        if (animationTiles.Count != 0)
-        {
-            foreach (Tile animationTile in animationTiles)
-            {
-                Destroy(animationTile);
-            }
-        }
-    }
-
     private IEnumerator animateFall(Tile topTile, int topTileY, Tile bottomTile, int bottomTileY, int x)
     {
         Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
-        animationTiles.Add(animationTile);
-        animationTile.gameObject.layer = LayerMask.NameToLayer("Igore Raycast");
+        animationTile.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 
         tileArray[x, bottomTileY].spriteRenderer.sprite = topTile.spriteRenderer.sprite;
 
         tileArray[x, topTileY].spriteRenderer.sprite = null;
 
-        //tileArray[x, bottomTileY].spriteRenderer.enabled = false;
+        tileArray[x, bottomTileY].spriteRenderer.enabled = false;
 
-        while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.001f)
+        Destroy(animationTile.gameObject, 2.5f); // t = 3f (?)
+        while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.01f)
         {
             animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position, (animationTile.transform.position.y -
                 bottomTile.transform.position.y) / 100);
             yield return null;
         }
 
-        //tileArray[x, bottomTileY].spriteRenderer.enabled = true;
+        tileArray[x, bottomTileY].spriteRenderer.enabled = true;
     }
 
     private List<Tile> FindMatch(Tile tile, Vector2 dir)
@@ -204,7 +190,7 @@ public class BoardController : MonoBehaviour
             }
             else
             {
-                StartCoroutine(WaitObj());
+                //StartCoroutine(WaitObj());
             }
 
             tile.spriteRenderer.sprite = null;
@@ -253,21 +239,24 @@ public class BoardController : MonoBehaviour
                 }
             }
         }
-
-        destroyAllAnimationTiles();
     }
 
     private void ShiftTileDown(int xPos, int yPos)
     {
         int y = yPos;
 
-        if (yPos != ySize - 1)
+        if (tileArray[xPos, ySize - 1].isEmpty)
+        {
+            GenerateNewSprite(xPos);
+        }
+        else
         {
             RaycastHit2D hit = Physics2D.Raycast(tileArray[xPos, yPos].transform.position, Vector2.up);
             y++;
 
             if (hit.collider != null)
             {
+                Debug.Log(hit.collider);
                 while (hit.collider.gameObject.GetComponent<SpriteRenderer>().sprite == null)
                 {
                     hit = Physics2D.Raycast(hit.collider.gameObject.transform.position, Vector2.up);
@@ -276,12 +265,6 @@ public class BoardController : MonoBehaviour
 
                 StartCoroutine(animateFall(hit.collider.gameObject.GetComponent<Tile>(), y, tileArray[xPos, yPos], yPos, xPos));
             }
-
-            //destroyAllAnimationTiles();
-        }
-        else
-        {
-            GenerateNewSprite(xPos);
         }
     }
 
@@ -304,6 +287,10 @@ public class BoardController : MonoBehaviour
             }
 
             tileArray[xPos, ySize - 1].spriteRenderer.sprite = cashSpriteList[Random.Range(0, cashSpriteList.Count)];
+        }
+        else
+        {
+            Debug.Log("ERROR: trying to generate top sprite though it exists");
         }
     }
 
