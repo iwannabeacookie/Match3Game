@@ -48,6 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Resources\Scripts\ScoreScript.cs" />
+     <Compile Include="Assets\Resources\Scripts\FailAnimationScript.cs" />
      <Compile Include="Assets\Resources\Scripts\TimerBarScript.cs" />
      <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
      <Compile Include="Assets\Resources\Scripts\Tile.cs" />

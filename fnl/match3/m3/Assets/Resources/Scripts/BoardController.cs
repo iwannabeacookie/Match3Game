@@ -13,6 +13,7 @@ public class BoardController : MonoBehaviour
 
     static GameObject instPref;
     public GameObject failAnim;
+    public Tile ScriptHolder;
 
     public GameObject[] TrombArray;
     public int CurrentTromb = 0;
@@ -27,6 +28,8 @@ public class BoardController : MonoBehaviour
 
     private bool isFindMatch = false;
 
+    public Vector3 SpritePos;
+
     public void SetValue(Tile[,] tileArray, int xSize, int ySize, List<Sprite> tileSprite)
     {
         this.xSize = xSize;
@@ -40,6 +43,8 @@ public class BoardController : MonoBehaviour
         instance = this;
     }
 
+
+
     void Start()
     {
         IncrementSprite = Resources.Load<Sprite>("Sprites/tromb-1 42");
@@ -47,6 +52,11 @@ public class BoardController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            SpritePos = Input.mousePosition;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D ray = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
@@ -138,7 +148,8 @@ public class BoardController : MonoBehaviour
 
     public void InstantiateAnimation()
     {
-        instPref = Instantiate(failAnim, failAnim.transform.position, Quaternion.identity);
+        instPref = Instantiate(failAnim, SpritePos, Quaternion.identity);
+        Debug.Log(SpritePos);
     }
 
     IEnumerator WaitObj()
@@ -224,30 +235,6 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    /* private void ShiftTileDown(int xPos, int yPos)
-    {
-        List<SpriteRenderer> cashRenderer = new List<SpriteRenderer>();
-        for (int y = yPos; y < ySize; y++)
-        {
-            Tile tile = tileArray[xPos, y];
-            if (tile.isEmpty)
-            {
-                cashRenderer.Add(tile.spriteRenderer);
-            }
-        }
-    }
-
-    private void SetNewSprite(int xPos, List<SpriteRenderer> renderer)
-    {
-
-    }
-
-    private void GetNewSprite()
-    {
-            
-    }
-    */
-
     private void ShiftTileDown(int xPos, int yPos)
     {
         if (yPos != ySize - 1)
@@ -311,4 +298,5 @@ public class BoardController : MonoBehaviour
         }
     }
 }
+
 

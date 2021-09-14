@@ -179,7 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29de7b94e0cb5ea4c99f07bc00076e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  failAnim: {fileID: 5463884022528995932, guid: 9874c47448abba94b89e2be33c9e4cd4, type: 3}
+  failAnim: {fileID: 4797153554156703232, guid: 8800aa38cace9df4ba8cb44d65af3956, type: 3}
+  ScriptHolder: {fileID: 8912759179214241906, guid: e31fabe06f1b06f4d889c88c7f2496f4, type: 3}
   TrombArray:
   - {fileID: 7842058739442910753, guid: 91091cb9a417bd0459cb753cc18a9990, type: 3}
   - {fileID: 5460272139666427231, guid: bcb85a7f07d5d054cac16cea4934614e, type: 3}
@@ -188,6 +189,7 @@ MonoBehaviour:
   - {fileID: 1110884119070503328, guid: 05421b9b03edaeb41972e5d0c269402a, type: 3}
   CurrentTromb: 0
   Canvas: {fileID: 1723036528}
+  SpritePos: {x: 0, y: 0, z: 0}
 --- !u!1 &251360269
 GameObject:
   m_ObjectHideFlags: 0
