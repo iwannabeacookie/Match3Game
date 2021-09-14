@@ -110,6 +110,7 @@ public class BoardController : MonoBehaviour
     {
         Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
         animationTile.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        animationTile.gameObject.tag = "AnimationSprite";
 
         tileArray[x, bottomTileY].spriteRenderer.sprite = topTile.spriteRenderer.sprite;
 
@@ -135,7 +136,7 @@ public class BoardController : MonoBehaviour
     {
         List<Tile> cashFindTiles = new List<Tile>();
         RaycastHit2D hit = Physics2D.Raycast(tile.transform.position, dir);
-        while (hit.collider != null && hit.collider.gameObject.GetComponent<Tile>().spriteRenderer.sprite == tile.spriteRenderer.sprite)
+        while (hit.collider != null && hit.collider.gameObject.GetComponent<Tile>().spriteRenderer.sprite == tile.spriteRenderer.sprite && tile.gameObject.tag != "AnimationSprite")
         {
             cashFindTiles.Add(hit.collider.gameObject.GetComponent<Tile>());
             hit = Physics2D.Raycast(hit.collider.gameObject.transform.position, dir);
