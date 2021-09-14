@@ -10,8 +10,14 @@ public class BoardController : MonoBehaviour
     private int xSize, ySize;
     private List<Sprite> tileSprite = new List<Sprite>();
     private Tile[,] tileArray;
-    public GameObject instPref;
+
+    static GameObject instPref;
     public GameObject failAnim;
+
+    public GameObject[] TrombArray;
+    public int CurrentTromb = 0;
+    public GameObject Canvas;
+
     private float TimeRemain;
 
     private Tile oldSelectTile;
@@ -160,16 +166,10 @@ public class BoardController : MonoBehaviour
         instPref = Instantiate(failAnim, failAnim.transform.position, Quaternion.identity);
     }
 
-    public void UnInstantiateAnimation()
-    {
-        Destroy(instPref);
-    }
-
     IEnumerator WaitObj()
     {
         InstantiateAnimation();
         yield return new WaitForSeconds(2f);
-        UnInstantiateAnimation();
     }
 
     private void FindAllMatch(Tile tile)
@@ -190,6 +190,9 @@ public class BoardController : MonoBehaviour
             {
                 ScoreScript.instance.IncreaseScoreCount();
                 ScoreScript.instance.ShowScore();
+                GameObject tromb = Instantiate(TrombArray[CurrentTromb], TrombArray[CurrentTromb].transform.position, Quaternion.identity);
+                tromb.transform.parent = Canvas.transform;
+                CurrentTromb += 1;
             }
             else
             {
