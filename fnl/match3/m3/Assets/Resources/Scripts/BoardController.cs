@@ -100,6 +100,29 @@ public class BoardController : MonoBehaviour
         }
     }
 
+    private IEnumerator animateFall(Tile topTile, int topTileY, Tile bottomTile, int bottomTileY, int x)
+    {
+        Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
+        animationTile.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+
+        tileArray[x, bottomTileY].spriteRenderer.sprite = topTile.spriteRenderer.sprite;
+
+        tileArray[x, topTileY].spriteRenderer.sprite = null;
+
+        tileArray[x, bottomTileY].spriteRenderer.enabled = false;
+
+        //Destroy(animationTile.gameObject, 0.5f); // t = 3f (?)
+        while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.01f)
+        {
+            animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position,
+                Vector3.Distance(tileArray[0, 0].transform.position, tileArray[0, ySize - 1].transform.position) / 200); // 20 for build | 200 for dev
+            yield return null;
+        }
+
+        Destroy(animationTile.gameObject);
+        tileArray[x, bottomTileY].spriteRenderer.enabled = true;
+    }
+
     private List<Tile> FindMatch(Tile tile, Vector2 dir)
     {
         List<Tile> cashFindTiles = new List<Tile>();
@@ -161,8 +184,6 @@ public class BoardController : MonoBehaviour
         {
             isFindMatch = false;
 
-            Debug.Log(IncrementSprite);
-
             if (tile.GetComponent<SpriteRenderer>().sprite == IncrementSprite)
             {
                 ScoreScript.instance.IncreaseScoreCount();
@@ -170,7 +191,7 @@ public class BoardController : MonoBehaviour
             }
             else
             {
-                StartCoroutine(WaitObj());
+                //StartCoroutine(WaitObj());
             }
 
             tile.spriteRenderer.sprite = null;
@@ -221,55 +242,30 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    /* private void ShiftTileDown(int xPos, int yPos)
-    {
-        List<SpriteRenderer> cashRenderer = new List<SpriteRenderer>();
-        for (int y = yPos; y < ySize; y++)
-        {
-            Tile tile = tileArray[xPos, y];
-            if (tile.isEmpty)
-            {
-                cashRenderer.Add(tile.spriteRenderer);
-            }
-        }
-    }
-
-    private void SetNewSprite(int xPos, List<SpriteRenderer> renderer)
-    {
-
-    }
-
-    private void GetNewSprite()
-    {
-            
-    }
-    */
-
     private void ShiftTileDown(int xPos, int yPos)
     {
-        if (yPos != ySize - 1)
+        int y = yPos;
+
+        if (tileArray[xPos, ySize - 1].isEmpty)
         {
-            for (int y = yPos; y < ySize; y++)
-            {
-                if (tileArray[xPos, (ySize - 1)].isEmpty)
-                {
-                    GenerateNewSprite(xPos);
-                }
-                if (!tileArray[xPos, y].isEmpty)
-                {
-                    tileArray[xPos, y - 1].spriteRenderer.sprite = tileArray[xPos, y].spriteRenderer.sprite;
-
-                    tileArray[xPos, y].spriteRenderer.sprite = null;
-
-                    GenerateNewSprite(xPos);
-
-                    return;
-                }
-            }
+            GenerateNewSprite(xPos);
         }
         else
         {
-            GenerateNewSprite(xPos);
+            RaycastHit2D hit = Physics2D.Raycast(tileArray[xPos, yPos].transform.position, Vector2.up);
+            y++;
+
+            if (hit.collider != null)
+            {
+                Debug.Log(hit.collider);
+                while (hit.collider.gameObject.GetComponent<SpriteRenderer>().sprite == null)
+                {
+                    hit = Physics2D.Raycast(hit.collider.gameObject.transform.position, Vector2.up);
+                    y++;
+                }
+
+                StartCoroutine(animateFall(hit.collider.gameObject.GetComponent<Tile>(), y, tileArray[xPos, yPos], yPos, xPos));
+            }
         }
     }
 
@@ -292,6 +288,10 @@ public class BoardController : MonoBehaviour
             }
 
             tileArray[xPos, ySize - 1].spriteRenderer.sprite = cashSpriteList[Random.Range(0, cashSpriteList.Count)];
+        }
+        else
+        {
+            Debug.Log("ERROR: trying to generate top sprite though it exists");
         }
     }
 

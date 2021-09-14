@@ -42,6 +42,7 @@ public class BoardScript : MonoBehaviour
                 Tile newTile = Instantiate(tileGO, transform.position, Quaternion.identity);
                 newTile.transform.position = new Vector3(xPos + (tileSize.x * x), yPos + (tileSize.y * y) , 0);
                 newTile.transform.parent = transform;
+                newTile.spriteRenderer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
 
                 tileArray[x, y] = newTile;
 
