@@ -115,7 +115,9 @@ public class BoardController : MonoBehaviour
         while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.01f)
         {
             animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position,
-                Vector3.Distance(tileArray[0, 0].transform.position, tileArray[0, ySize - 1].transform.position) / 200); // 20 for build | 200 for dev
+                Vector3.Distance(tileArray[0, 0].transform.position, tileArray[0, ySize - 1].transform.position) / 400); // 20 for build | 200 for dev
+            Debug.Log(("Distance between ", animationTile.spriteRenderer.sprite, " and [", 
+                x, bottomTileY, "] - ", Vector3.Distance(animationTile.transform.position, bottomTile.transform.position)));
             yield return null;
         }
 
