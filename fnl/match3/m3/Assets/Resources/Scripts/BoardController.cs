@@ -76,18 +76,29 @@ public class BoardController : MonoBehaviour
         oldSelectTile = null;
     }
 
-    private IEnumerator dragTile(Tile tile)
+    private IEnumerator dragTile(Tile tile, Tile initialTile)
     {
         while (Input.GetMouseButton(0))
         {
-            Debug.Log(Input.mousePosition);
-
-            tile.transform.position = Input.mousePosition + GameObject.Find("Board").transform.position;
+            tile.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             yield return null;
         }
 
         Destroy(tile.gameObject);
+
+        RaycastHit2D ray = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
+
+        if (ray.collider != null)
+        {
+            if (ray.collider.gameObject.GetComponent<Tile>() != null && AdjacentTiles().Contains(ray.collider.gameObject.GetComponent<Tile>()))
+            {
+                SwapTwoTiles(ray.collider.gameObject.GetComponent<Tile>());
+            }
+        }
+
+        initialTile.spriteRenderer.enabled = true;
+        DeselectTile(initialTile);
     }
 
     private void CheckSelectTile(Tile tile)
@@ -98,27 +109,15 @@ public class BoardController : MonoBehaviour
         }
 
         Tile dragAnimationTile = Instantiate(tile, tile.transform.position, Quaternion.identity);
+        dragAnimationTile.transform.SetParent(GameObject.Find("Board").transform, false);
+        dragAnimationTile.spriteRenderer.sortingLayerName = "AnimationSprites";
         dragAnimationTile.spriteRenderer.color = new Color(1, 1, 1);
         dragAnimationTile.gameObject.tag = "AnimationSprite";
 
+        tile.spriteRenderer.enabled = false;
         SelectTile(tile);
 
-        StartCoroutine(dragTile(dragAnimationTile));
-
-       
-
-        /*
-        RaycastHit2D ray = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
-
-        if (ray.collider != null)
-        {
-            if (ray.collider.gameObject.GetComponent<Tile>() != null)
-            {
-                SwapTwoTiles(ray.collider.gameObject.GetComponent<Tile>();
-            }
-        }
-
-        DeselectTile(tile);*/
+        StartCoroutine(dragTile(dragAnimationTile, tile));
     }
 
     /*private void CheckSelectTile(Tile tile)
@@ -182,7 +181,8 @@ public class BoardController : MonoBehaviour
     {
         List<Tile> cashFindTiles = new List<Tile>();
         RaycastHit2D hit = Physics2D.Raycast(tile.transform.position, dir);
-        while (hit.collider != null && hit.collider.gameObject.GetComponent<Tile>().spriteRenderer.sprite == tile.spriteRenderer.sprite && hit.collider.gameObject.tag != "AnimationSprite")
+        while (hit.collider != null && hit.collider.gameObject.GetComponent<Tile>().spriteRenderer.sprite == tile.spriteRenderer.sprite
+            && hit.collider.gameObject.tag != "AnimationSprite" && hit.collider.gameObject.tag != "TopRowTile")
         {
             cashFindTiles.Add(hit.collider.gameObject.GetComponent<Tile>());
             hit = Physics2D.Raycast(hit.collider.gameObject.transform.position, dir);
@@ -351,7 +351,7 @@ public class BoardController : MonoBehaviour
     {
         for (int x = 0; x < xSize; x++)
         {
-            for (int y = 0; y < ySize; y++)
+            for (int y = 0; y < ySize - 1; y++)
             {
                 Tile tile = tileArray[x, y];
 

@@ -43,6 +43,12 @@ public class BoardScript : MonoBehaviour
                 newTile.transform.position = new Vector3(xPos + (tileSize.x * x), yPos + (tileSize.y * y) , 0);
                 newTile.transform.parent = transform;
                 newTile.spriteRenderer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                newTile.gameObject.layer = LayerMask.NameToLayer("TileLayer");
+
+                if (y == ySize - 1)
+                {
+                    newTile.gameObject.tag = "TopRowTile";
+                }
 
                 tileArray[x, y] = newTile;
 
