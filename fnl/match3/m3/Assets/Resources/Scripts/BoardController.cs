@@ -27,6 +27,8 @@ public class BoardController : MonoBehaviour
 
     private bool isFindMatch = false;
 
+    private bool draggingTile = false;
+
     public void SetValue(Tile[,] tileArray, int xSize, int ySize, List<Sprite> tileSprite)
     {
         this.xSize = xSize;
@@ -47,7 +49,7 @@ public class BoardController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if ((Input.GetMouseButtonDown(0)) && (!draggingTile))
         {
             RaycastHit2D ray = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
             if (ray != false)
@@ -73,7 +75,53 @@ public class BoardController : MonoBehaviour
         tile.spriteRenderer.color = new Color(1, 1, 1);
         oldSelectTile = null;
     }
+
+    private IEnumerator dragTile(Tile tile)
+    {
+        while (Input.GetMouseButton(0))
+        {
+            Debug.Log(Input.mousePosition);
+
+            tile.transform.position = Input.mousePosition + GameObject.Find("Board").transform.position;
+
+            yield return null;
+        }
+
+        Destroy(tile.gameObject);
+    }
+
     private void CheckSelectTile(Tile tile)
+    {
+        if (tile.isEmpty)
+        {
+            return;
+        }
+
+        Tile dragAnimationTile = Instantiate(tile, tile.transform.position, Quaternion.identity);
+        dragAnimationTile.spriteRenderer.color = new Color(1, 1, 1);
+        dragAnimationTile.gameObject.tag = "AnimationSprite";
+
+        SelectTile(tile);
+
+        StartCoroutine(dragTile(dragAnimationTile));
+
+       
+
+        /*
+        RaycastHit2D ray = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
+
+        if (ray.collider != null)
+        {
+            if (ray.collider.gameObject.GetComponent<Tile>() != null)
+            {
+                SwapTwoTiles(ray.collider.gameObject.GetComponent<Tile>();
+            }
+        }
+
+        DeselectTile(tile);*/
+    }
+
+    /*private void CheckSelectTile(Tile tile)
     {
         if (tile.isEmpty)
         {
@@ -105,11 +153,12 @@ public class BoardController : MonoBehaviour
             }
         }
     }
-
+    */
     private IEnumerator animateFall(Tile topTile, int topTileY, Tile bottomTile, int bottomTileY, int x)
     {
         Tile animationTile = Instantiate(topTile, topTile.transform.position, Quaternion.identity);
         animationTile.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        animationTile.gameObject.tag = "AnimationSprite";
 
         tileArray[x, bottomTileY].spriteRenderer.sprite = topTile.spriteRenderer.sprite;
 
@@ -121,9 +170,7 @@ public class BoardController : MonoBehaviour
         while (Vector3.Distance(animationTile.transform.position, bottomTile.transform.position) > 0.01f)
         {
             animationTile.transform.position = Vector3.MoveTowards(animationTile.transform.position, bottomTile.transform.position,
-                Vector3.Distance(tileArray[0, 0].transform.position, tileArray[0, ySize - 1].transform.position) / 400); // 20 for build | 200 for dev
-            Debug.Log(("Distance between ", animationTile.spriteRenderer.sprite, " and [", 
-                x, bottomTileY, "] - ", Vector3.Distance(animationTile.transform.position, bottomTile.transform.position)));
+                Vector3.Distance(tileArray[0, 0].transform.position, tileArray[0, ySize - 1].transform.position) / 40); // 20 for build | 200 for dev
             yield return null;
         }
 
@@ -135,7 +182,7 @@ public class BoardController : MonoBehaviour
     {
         List<Tile> cashFindTiles = new List<Tile>();
         RaycastHit2D hit = Physics2D.Raycast(tile.transform.position, dir);
-        while (hit.collider != null && hit.collider.gameObject.GetComponent<Tile>().spriteRenderer.sprite == tile.spriteRenderer.sprite)
+        while (hit.collider != null && hit.collider.gameObject.GetComponent<Tile>().spriteRenderer.sprite == tile.spriteRenderer.sprite && hit.collider.gameObject.tag != "AnimationSprite")
         {
             cashFindTiles.Add(hit.collider.gameObject.GetComponent<Tile>());
             hit = Physics2D.Raycast(hit.collider.gameObject.transform.position, dir);
@@ -196,7 +243,7 @@ public class BoardController : MonoBehaviour
             }
             else
             {
-                //StartCoroutine(WaitObj());
+                StartCoroutine(WaitObj());
             }
 
             tile.spriteRenderer.sprite = null;

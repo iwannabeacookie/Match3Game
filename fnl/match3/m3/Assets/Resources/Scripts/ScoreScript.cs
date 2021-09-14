@@ -22,7 +22,7 @@ public class ScoreScript : MonoBehaviour
     {
         GameObject Anim = Instantiate(SosudInst, SosudInst.transform.position, Quaternion.identity);
         Anim.transform.parent = Canvas.transform;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 

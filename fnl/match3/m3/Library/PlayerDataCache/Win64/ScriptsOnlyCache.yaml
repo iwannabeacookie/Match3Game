@@ -3,6 +3,7 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - BoardController
     - BoardScript
+    - FailAnimationScript
     - GameManager
     - RestButtWinScreen
     - RestartButtonScript
@@ -54,19 +55,19 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1454}
+      Script: {instanceID: 6894}
     - Class: 114
-      Script: {instanceID: 2618}
+      Script: {instanceID: 7978}
     - Class: 114
-      Script: {instanceID: 2778}
+      Script: {instanceID: 8136}
     - Class: 114
-      Script: {instanceID: 2998}
+      Script: {instanceID: 8350}
     - Class: 114
-      Script: {instanceID: 3244}
+      Script: {instanceID: 8596}
     - Class: 114
-      Script: {instanceID: 3356}
+      Script: {instanceID: 8708}
     - Class: 114
-      Script: {instanceID: 3816}
+      Script: {instanceID: 9166}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -96,34 +97,42 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 61
       Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
     - Class: 81
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1454}
+      Script: {instanceID: 6886}
     - Class: 114
-      Script: {instanceID: 1510}
+      Script: {instanceID: 6894}
     - Class: 114
-      Script: {instanceID: 2204}
+      Script: {instanceID: 7012}
     - Class: 114
-      Script: {instanceID: 2618}
+      Script: {instanceID: 7568}
     - Class: 114
-      Script: {instanceID: 2778}
+      Script: {instanceID: 7978}
     - Class: 114
-      Script: {instanceID: 2848}
+      Script: {instanceID: 8136}
     - Class: 114
-      Script: {instanceID: 2898}
+      Script: {instanceID: 8202}
     - Class: 114
-      Script: {instanceID: 2998}
+      Script: {instanceID: 8250}
     - Class: 114
-      Script: {instanceID: 3236}
+      Script: {instanceID: 8350}
     - Class: 114
-      Script: {instanceID: 3244}
+      Script: {instanceID: 8588}
     - Class: 114
-      Script: {instanceID: 3644}
+      Script: {instanceID: 8596}
     - Class: 114
-      Script: {instanceID: 3922}
+      Script: {instanceID: 8994}
+    - Class: 114
+      Script: {instanceID: 9272}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -163,26 +172,34 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 61
       Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
     - Class: 81
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1454}
+      Script: {instanceID: 6894}
     - Class: 114
-      Script: {instanceID: 2618}
+      Script: {instanceID: 7012}
     - Class: 114
-      Script: {instanceID: 2778}
+      Script: {instanceID: 7978}
     - Class: 114
-      Script: {instanceID: 2998}
+      Script: {instanceID: 8136}
     - Class: 114
-      Script: {instanceID: 3236}
+      Script: {instanceID: 8350}
     - Class: 114
-      Script: {instanceID: 3244}
+      Script: {instanceID: 8588}
     - Class: 114
-      Script: {instanceID: 3356}
+      Script: {instanceID: 8596}
     - Class: 114
-      Script: {instanceID: 4826}
+      Script: {instanceID: 8708}
+    - Class: 114
+      Script: {instanceID: 10162}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -219,19 +236,19 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1454}
+      Script: {instanceID: 6894}
     - Class: 114
-      Script: {instanceID: 2618}
+      Script: {instanceID: 7978}
     - Class: 114
-      Script: {instanceID: 2778}
+      Script: {instanceID: 8136}
     - Class: 114
-      Script: {instanceID: 2998}
+      Script: {instanceID: 8350}
     - Class: 114
-      Script: {instanceID: 3244}
+      Script: {instanceID: 8596}
     - Class: 114
-      Script: {instanceID: 3356}
+      Script: {instanceID: 8708}
     - Class: 114
-      Script: {instanceID: 3836}
+      Script: {instanceID: 9186}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -249,22 +266,22 @@ ScriptsOnlyBuild:
   scriptHashData:
   - hash:
       serializedVersion: 2
-      Hash: a6e561615949734e9f12f9b61661f43e
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: Image
-  - hash:
-      serializedVersion: 2
       Hash: 5ab533713adae59372fb3e10a585c186
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 69a45955a2fbf0caf613df96da32e06c
+      Hash: fc3870856a200e4c9e88ab2360504668
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ScoreScript
+  - hash:
+      serializedVersion: 2
+      Hash: a6e561615949734e9f12f9b61661f43e
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: Image
   - hash:
       serializedVersion: 2
       Hash: 77aaaaa51f7a8d8ff333a879741e47d2
@@ -295,6 +312,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Toggle
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FailAnimationScript
   - hash:
       serializedVersion: 2
       Hash: 59ce5902048c1041729c804e2772b2ce
@@ -609,7 +632,7 @@ ScriptsOnlyBuild:
     className: PlayModeRunnerCallback
   - hash:
       serializedVersion: 2
-      Hash: b2279ee8b506536d1bcb5e3ed12a8986
+      Hash: 36c5ec1173a9c377e68ab8cb9c17f62e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BoardController
@@ -823,4 +846,4 @@ ScriptsOnlyBuild:
   - Assets/Resources/Scenes/MainScene.unity
   - Assets/Resources/Scenes/WinScreen.unity
   - Assets/Resources/Scenes/LoseScreen.unity
-  playerPath: C:/Users/Artem/Downloads/match3Build/m3.exe
+  playerPath: C:/Users/Artem/Downloads/match3BuildWithExplosions/m3.exe
